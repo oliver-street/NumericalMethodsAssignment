@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Outer code for setting up the linear advection problem on a uniform
 # grid and calling the function to perform the linear advection and plot.
@@ -18,7 +18,7 @@
 ### If you are using Python 2.7 rather than Python 3, import various###
 ### functions from Python 3 such as to use real number division     ###
 ### rather than integer division. ie 3/2  = 1.5  rather than 3/2 = 1###
-from __future__ import absolute_import, division, print_function
+#from __future__ import absolute_import, division, print_function
 
 ### The matplotlib package contains plotting functions              ###
 import matplotlib.pyplot as plt
@@ -73,7 +73,7 @@ def main():
     plt.ylim([-0.2,1.2])
     plt.legend(bbox_to_anchor=(1.15 , 1.1))
     plt.xlabel('$x$')
-    raw_input('press return to save file and continue')
+    input('press return to save file and continue')
     plt.savefig('plots/changeThisName.pdf')
 
 ### Run the function main defined in this file                      ###

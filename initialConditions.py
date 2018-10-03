@@ -1,15 +1,11 @@
-### Copy out most of this code. Code commented with 3#s (like this) ###
-### is here to help you to learn python and need not be copied      ###
-
-### If you are using Python 2.7 rather than Python 3, import various###
-### functions from Python 3 such as to use real number division     ###
-### rather than integer division. ie 3/2  = 1.5  rather than 3/2 = 1###
-from __future__ import absolute_import, division, print_function
-
-### The numpy package for numerical functions and pi                ###
-import numpy as np
-
 # Various different initial conditions for linear advection
+
+# If you are using Python 2.7 rather than Python 3, import various
+# functions from Python 3 such as to use real number division
+# rather than integer division. ie 3/2  = 1.5  rather than 3/2 = 1
+#from __future__ import absolute_import, division, print_function
+
+import numpy as np
 
 def squareWave(x,alpha,beta):
     "A square wave as a function of position, x, which is 1 between alpha"
