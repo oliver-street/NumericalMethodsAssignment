@@ -53,3 +53,96 @@ def FTBS(phiOld, c, nt):
         phiOld = phi.copy()
 
     return phi
+
+
+def CTCS(phiOld, c, nt):
+    "Linear advection of profile in phiOld using CTCS, Courant number c"
+    "for nt time-steps"
+
+    nx = len(phiOld)
+
+    # value of phi generated  at time t_1
+    phiOld2 = FTCS(phiOld, c, 1)
+
+    phi = phiOld2.copy()
+
+    for it in range(nt-1):
+
+        for j in range(nx):
+            phi[j] = phiOld[j] - c*\
+                     (phiOld2[(j+1)%nx] - phiOld2[(j-1)%nx])
+
+        phiOld = phiOld2.copy()
+        phiOld2 = phi.copy()
+
+
+    return phi
+
+
+def FTFS(phiOld, c, nt):
+    "Linear advection of profile in phiOld using FTFS, Courant number c"
+    "for nt time-steps"
+
+    nx = len(phiOld)
+
+    # new time-step array for phi
+    phi = phiOld.copy()
+
+    # FTCS for each time-step
+    for it in range(nt):
+        # Loop through all space using remainder after division (%)
+        # to cope with periodic boundary conditions
+        for j in range(nx):
+            phi[j] = phiOld[j] - c*\
+                     (phiOld[(j+1)%nx] - phiOld[(j)%nx])
+
+        # update arrays for next time-step
+        phiOld = phi.copy()
+
+    return phi
+
+
+def CTFS(phiOld, c, nt):
+    "Linear advection of profile in phiOld using CTFS, Courant number c"
+    "for nt time-steps"
+
+    nx = len(phiOld)
+
+    # value of phi generated  at time t_1
+    phiOld2 = FTFS(phiOld, c, 1)
+
+    phi = phiOld2.copy()
+
+    for it in range(nt-1):
+
+        for j in range(nx):
+            phi[j] = phiOld[j] - 2*c*\
+                     (phiOld2[(j+1)%nx] - phiOld2[(j)%nx])
+
+        phiOld = phiOld2.copy()
+        phiOld2 = phi.copy()
+
+    return phi
+
+
+def CTBS(phiOld, c, nt):
+    "Linear advection of profile in phiOld using CTBS, Courant number c"
+    "for nt time-steps"
+
+    nx = len(phiOld)
+
+    # value of phi generated  at time t_1
+    phiOld2 = FTBS(phiOld, c, 1)
+
+    phi = phiOld2.copy()
+
+    for it in range(nt-1):
+
+        for j in range(nx):
+            phi[j] = phiOld[j] - 2*c*\
+                     (phiOld2[(j)%nx] - phiOld2[(j-1)%nx])
+
+        phiOld = phiOld2.copy()
+        phiOld2 = phi.copy()
+
+    return phi

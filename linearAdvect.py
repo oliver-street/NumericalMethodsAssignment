@@ -37,7 +37,7 @@ def main():
     # Parameters
     xmin = 0
     xmax = 1
-    nx = 40
+    nx = 400
     nt = 40
     c = 0.2
 
@@ -48,16 +48,31 @@ def main():
     x = np.arange(xmin, xmax, dx)
 
     # Initial conditions
-    phiOld = cosBell(x, 0, 0.75)
+    phiOld = cosBell(x, 0.2, 0.4)
     # Exact solution is the initial condition shifted around the domain
-    phiAnalytic = cosBell((x - c*nt*dx)%(xmax - xmin), 0, 0.75)
+    phiAnalytic = cosBell((x - c*nt*dx)%(xmax - xmin), 0.2, 0.4)
 
     # Advect the profile using finite difference for all the time steps
+    phiCTCS = CTCS(phiOld.copy(), c, nt)
     phiFTCS = FTCS(phiOld.copy(), c, nt)
+    phiFTBS = FTBS(phiOld.copy(), c, nt)
+    phiFTFS = FTFS(phiOld.copy(), c, nt)
+    phiCTFS = CTFS(phiOld.copy(), c, nt)
+    phiCTBS = CTBS(phiOld.copy(), c, nt)
 
     # Calculate and print out error norms
+    print("CTCS l2 error norm = ", l2ErrorNorm(phiCTCS, phiAnalytic))
+    print("CTCS linf error norm = ", lInfErrorNorm(phiCTCS, phiAnalytic))
     print("FTCS l2 error norm = ", l2ErrorNorm(phiFTCS, phiAnalytic))
     print("FTCS linf error norm = ", lInfErrorNorm(phiFTCS, phiAnalytic))
+    print("FTBS l2 error norm = ", l2ErrorNorm(phiFTBS, phiAnalytic))
+    print("FTBS linf error norm = ", lInfErrorNorm(phiFTBS, phiAnalytic))
+    print("FTFS l2 error norm = ", l2ErrorNorm(phiFTFS, phiAnalytic))
+    print("FTFS linf error norm = ", lInfErrorNorm(phiFTFS, phiAnalytic))
+    print("CTFS l2 error norm = ", l2ErrorNorm(phiCTFS, phiAnalytic))
+    print("CTFS linf error norm = ", lInfErrorNorm(phiCTFS, phiAnalytic))
+    print("CTBS l2 error norm = ", l2ErrorNorm(phiCTBS, phiAnalytic))
+    print("CTBS linf error norm = ", lInfErrorNorm(phiCTBS, phiAnalytic))
 
     # Plot the solutions
     font = {'size'   : 20}
@@ -68,13 +83,19 @@ def main():
     plt.plot(x, phiOld, label='Initial', color='black')
     plt.plot(x, phiAnalytic, label='Analytic', color='black',
              linestyle='--', linewidth=2)
+    plt.plot(x, phiCTCS, label='CTCS', color='red')
     plt.plot(x, phiFTCS, label='FTCS', color='blue')
+    plt.plot(x, phiFTBS, label='FTBS', color='green')
+    plt.plot(x, phiFTFS, label='FTFS', color='purple')
+    plt.plot(x, phiCTFS, label='CTFS', color='orange')
+    plt.plot(x, phiCTBS, label='CTBS', color='yellow')
     plt.axhline(0, linestyle=':', color='black')
     plt.ylim([-0.2,1.2])
     plt.legend(bbox_to_anchor=(1.15 , 1.1))
     plt.xlabel('$x$')
     input('press return to save file and continue')
-    plt.savefig('plots/FTCS.pdf')
+    plt.savefig('plots/FTCS+CTCS+FTBS+FTFS+CTFS+CTBS.pdf')
+    plt.show('plots/FTCS+CTCS+FTBS+FTFS+CTFS+CTBS.pdf')
 
 ### Run the function main defined in this file                      ###
 main()
