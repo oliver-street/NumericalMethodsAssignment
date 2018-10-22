@@ -33,6 +33,7 @@ from diagnostics import *
 def main():
     "Advect the initial conditions using various advection schemes and"
     "compare results"
+    "comment out any schemes which you do not wish to impliment"
 
     # Parameters
     xmin = 0
@@ -59,6 +60,7 @@ def main():
     phiFTFS = FTFS(phiOld.copy(), c, nt)
     phiCTFS = CTFS(phiOld.copy(), c, nt)
     phiCTBS = CTBS(phiOld.copy(), c, nt)
+    phiBTCS = BTCS(phiOld.copy(), c, nt)
 
     # Calculate and print out error norms
     print("CTCS l2 error norm = ", l2ErrorNorm(phiCTCS, phiAnalytic))
@@ -73,6 +75,8 @@ def main():
     print("CTFS linf error norm = ", lInfErrorNorm(phiCTFS, phiAnalytic))
     print("CTBS l2 error norm = ", l2ErrorNorm(phiCTBS, phiAnalytic))
     print("CTBS linf error norm = ", lInfErrorNorm(phiCTBS, phiAnalytic))
+    print("BTCS l2 error norm = ", l2ErrorNorm(phiBTCS, phiAnalytic))
+    print("BTCS linf error norm = ", lInfErrorNorm(phiBTCS, phiAnalytic))
 
     # Plot the solutions
     font = {'size'   : 20}
@@ -89,13 +93,14 @@ def main():
     plt.plot(x, phiFTFS, label='FTFS', color='purple')
     plt.plot(x, phiCTFS, label='CTFS', color='orange')
     plt.plot(x, phiCTBS, label='CTBS', color='yellow')
+    plt.plot(x, phiBTCS, label='BTCS', color='pink')
     plt.axhline(0, linestyle=':', color='black')
     plt.ylim([-0.2,1.2])
     plt.legend(bbox_to_anchor=(1.15 , 1.1))
     plt.xlabel('$x$')
     input('press return to save file and continue')
-    plt.savefig('plots/FTCS+CTCS+FTBS+FTFS+CTFS+CTBS.pdf')
-    plt.show('plots/FTCS+CTCS+FTBS+FTFS+CTFS+CTBS.pdf')
+    plt.savefig('plots/ManyAdvections.pdf')
+    plt.show('plots/ManyAdvections.pdf')
 
 ### Run the function main defined in this file                      ###
 main()

@@ -146,3 +146,33 @@ def CTBS(phiOld, c, nt):
         phiOld2 = phi.copy()
 
     return phi
+
+
+def BTCS(phiOld, c, nt):
+    "Linear advection of profile in phiOld using BTCS, Courant number c"
+    "for nt time-steps"
+
+    from numpy.linalg import inv
+
+    nx = len(phiOld)
+
+    #create empty array
+    A = np.zeros(shape=(nx,nx))
+
+    #fill diagonal with elemtents 1
+    np.fill_diagonal(A, 1)
+
+    #fill 'corner' elements as +-c/2
+    A[0,nx-1] = -c/2
+    A[nx-1,0] = c/2
+
+    #fill elements above/below the diagonal with +-c/2
+    for j in range(nx-1):
+        A[j,j+1] = c/2
+        A[j+1,j] = -c/2
+
+    Ainv = inv(A)
+
+    phi = np.linalg.matrix_power(Ainv,nt)@phiOld
+
+    return phi
