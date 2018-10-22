@@ -176,3 +176,23 @@ def BTCS(phiOld, c, nt):
     phi = np.linalg.matrix_power(Ainv,nt)@phiOld
 
     return phi
+
+
+def LaxWendroff(phiOld, c, nt):
+    "Linear advection of profile in phiOld using Lax-Wendroff"
+    "Courant number c, for nt time-steps"
+
+    nx = len(phiOld)
+
+    phi = phiOld.copy()
+
+    for it in range(nt):
+
+        for j in range(nx):
+
+            phi[j] = (1-c**2)*phiOld[j] - (c/2)*(1-c)*phiOld[(j+1)%nx] + \
+                    (c/2)*(1+c)*phiOld[(j-1)%nx]
+
+        phiOld = phi.copy()
+
+    return phi

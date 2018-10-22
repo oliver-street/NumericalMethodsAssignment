@@ -39,7 +39,7 @@ def main():
     xmin = 0
     xmax = 1
     nx = 400
-    nt = 40
+    nt = 400
     c = 0.2
 
     # Derived parameters
@@ -61,6 +61,7 @@ def main():
     phiCTFS = CTFS(phiOld.copy(), c, nt)
     phiCTBS = CTBS(phiOld.copy(), c, nt)
     phiBTCS = BTCS(phiOld.copy(), c, nt)
+    phiLaxWendroff = LaxWendroff(phiOld.copy(), c, nt)
 
     # Calculate and print out error norms
     print("CTCS l2 error norm = ", l2ErrorNorm(phiCTCS, phiAnalytic))
@@ -77,6 +78,8 @@ def main():
     print("CTBS linf error norm = ", lInfErrorNorm(phiCTBS, phiAnalytic))
     print("BTCS l2 error norm = ", l2ErrorNorm(phiBTCS, phiAnalytic))
     print("BTCS linf error norm = ", lInfErrorNorm(phiBTCS, phiAnalytic))
+    print("Lax-Wendroff l2 error norm = ", l2ErrorNorm(phiLaxWendroff, phiAnalytic))
+    print("Lax-Wendroff linf error norm = ", lInfErrorNorm(phiLaxWendroff, phiAnalytic))
 
     # Plot the solutions
     font = {'size'   : 20}
@@ -94,13 +97,14 @@ def main():
     plt.plot(x, phiCTFS, label='CTFS', color='orange')
     plt.plot(x, phiCTBS, label='CTBS', color='yellow')
     plt.plot(x, phiBTCS, label='BTCS', color='pink')
+    plt.plot(x, phiLaxWendroff, label='Lax-Wendroff', color='magenta')
     plt.axhline(0, linestyle=':', color='black')
     plt.ylim([-0.2,1.2])
     plt.legend(bbox_to_anchor=(1.15 , 1.1))
     plt.xlabel('$x$')
     input('press return to save file and continue')
-    plt.savefig('plots/ManyAdvections.pdf')
-    plt.show('plots/ManyAdvections.pdf')
+    plt.savefig('plots/ManyAdvectionSchemes.pdf')
+    plt.show('plots/ManyAdvectionSchemes.pdf')
 
 ### Run the function main defined in this file                      ###
 main()
