@@ -1,0 +1,47 @@
+Great start. Good code.
+
+Good use of git with good commit messages.
+
+You should have a .gitignore file so that you don't add binary files such as .ipynb and .pdf files to the repository
+
+Terrific results. Good code.
+
+For the report, you should show that LW also has better properties that CTCS and FTBS. As FTCS is unstable it is too easy to find a scheme better than FTCS.
+
+Do not leave my teaching comments:
+# If you are using Python 2.7 rather than Python 3, import various
+# functions from Python 3 such as to use real number division
+# rather than integer division. ie 3/2  = 1.5  rather than 3/2 = 1
+#from __future__ import absolute_import, division, print_function
+at the top of files
+
+Use coarser resolution so that your code runs more quickly and so that it is easier to see the differences between the results of different schemes.
+
+Also use the square wave initial conditions so that you can compare the different schemes for discontinuous initial conditions.
+
+Delete and remove old code from the repository that is not needed to create the results that you will put into the report. The point of using a version control system such as git is that you can always get back old code.
+
+Good doc strings
+
+Make sure that CTCS returns the correct answer when called for nt=0
+
+It seems a bit pointless to keep forward in space schemes in the file.
+
+In BTCS, do not invert matrix M. This becomes prohibitively expensive for large models. Use 
+phi = nplinalg.solve(M, phi)
+instead. 
+Delete and remove old code from the repository that is not needed to create the results that you will put into the report. The point of using a version control system such as git is that you can always get back old code.
+
+It is a nice trick taking the power of the matrix to step forward nt time steps. But this would not be useful in a real model as other things would change. Do use time stepping as in other schemes.
+
+Don't use more brackets than needed. For example the line:
+phi[j] = (1-c**2)*phiOld[j] - (c/2)*(1-c)*phiOld[(j+1)%nx] + \
+                    (c/2)*(1+c)*phiOld[(j-1)%nx]
+
+has more bracets than needed.
+
+
+
+Follow the guidelines at 
+https://www.dropbox.com/s/yba7pj7woyvv7hs/goodCode.pdf?dl=1
+
