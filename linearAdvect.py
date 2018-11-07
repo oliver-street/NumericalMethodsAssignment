@@ -15,10 +15,6 @@
 ### should never mix tabs and spaces for indentation - use 4 spaces.###
 ### Setup your text editor to insert 4 spaces when you press tab    ###
 
-### If you are using Python 2.7 rather than Python 3, import various###
-### functions from Python 3 such as to use real number division     ###
-### rather than integer division. ie 3/2  = 1.5  rather than 3/2 = 1###
-#from __future__ import absolute_import, division, print_function
 
 ### The matplotlib package contains plotting functions              ###
 import matplotlib.pyplot as plt
@@ -67,16 +63,8 @@ def main():
     # Calculate and print out error norms
     print("CTCS l2 error norm = ", l2ErrorNorm(phiCTCS, phiAnalytic))
     print("CTCS linf error norm = ", lInfErrorNorm(phiCTCS, phiAnalytic))
-    #print("FTCS l2 error norm = ", l2ErrorNorm(phiFTCS, phiAnalytic))
-    #print("FTCS linf error norm = ", lInfErrorNorm(phiFTCS, phiAnalytic))
-    print("FTBS l2 error norm = ", l2ErrorNorm(phiFTBS, phiAnalytic))
-    print("FTBS linf error norm = ", lInfErrorNorm(phiFTBS, phiAnalytic))
-    #print("FTFS l2 error norm = ", l2ErrorNorm(phiFTFS, phiAnalytic))
-    #print("FTFS linf error norm = ", lInfErrorNorm(phiFTFS, phiAnalytic))
-    #print("CTFS l2 error norm = ", l2ErrorNorm(phiCTFS, phiAnalytic))
-    #print("CTFS linf error norm = ", lInfErrorNorm(phiCTFS, phiAnalytic))
-    #print("CTBS l2 error norm = ", l2ErrorNorm(phiCTBS, phiAnalytic))
-    #print("CTBS linf error norm = ", lInfErrorNorm(phiCTBS, phiAnalytic))
+    #print("FTBS l2 error norm = ", l2ErrorNorm(phiFTBS, phiAnalytic))
+    #print("FTBS linf error norm = ", lInfErrorNorm(phiFTBS, phiAnalytic))
     #print("BTCS l2 error norm = ", l2ErrorNorm(phiBTCS, phiAnalytic))
     #print("BTCS linf error norm = ", lInfErrorNorm(phiBTCS, phiAnalytic))
     print("Lax-Wendroff l2 error norm = ", l2ErrorNorm(phiLaxWendroff, phiAnalytic))
@@ -92,12 +80,8 @@ def main():
     plt.plot(x, phiAnalytic, label='Analytic', color='black',
              linestyle='--', linewidth=2)
     plt.plot(x, phiCTCS, label='CTCS', color='red')
-    #plt.plot(x, phiFTCS, label='FTCS', color='blue')
-    plt.plot(x, phiFTBS, label='FTBS', color='green')
-    #plt.plot(x, phiFTFS, label='FTFS', color='purple')
-    #plt.plot(x, phiCTFS, label='CTFS', color='orange')
-    #plt.plot(x, phiCTBS, label='CTBS', color='yellow')
-    #plt.plot(x, phiBTCS, label='BTCS', color='pink')
+    #plt.plot(x, phiFTBS, label='FTBS', color='green')
+    #plt.plot(x, phiBTCS, label='BTCS', color='blue')
     plt.plot(x, phiLaxWendroff, label='Lax-Wendroff', color='magenta')
     plt.axhline(0, linestyle=':', color='black')
     plt.ylim([-0.2,1.2])
@@ -105,7 +89,7 @@ def main():
     plt.xlabel('$x$')
     input('press return to save file and continue')
     plt.savefig('plots/LaxWendroff_FTBS_CTCS.pdf')
-    plt.show('plots/LaxWendroff_FTBS_CTCS.pdf')
+    plt.show('plots/LaxWendroff_CTCS.pdf')
 
 ### Run the function main defined in this file                      ###
 main()
