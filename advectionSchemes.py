@@ -37,10 +37,13 @@ def FTBS(phiOld, c, nt):
     # new time-step array for phi
     phi = phiOld.copy()
 
+
     # FTCS for each time-step
     for it in range(nt):
         # Loop through all space using remainder after division (%)
         # to cope with periodic boundary conditions
+
+
         for j in range(nx):
             phi[j] = phiOld[j] - c*\
                      (phiOld[(j)] - phiOld[(j-1)%nx])
@@ -57,91 +60,27 @@ def CTCS(phiOld, c, nt):
 
     nx = len(phiOld)
 
+    if nt == 0:
+        phi = phiOld
+
+    else:
     # value of phi generated  at time t_1
-    phiOld2 = FTCS(phiOld, c, 1)
+        phiOld2 = FTCS(phiOld, c, 1)
 
-    phi = phiOld2.copy()
+        phi = phiOld2.copy()
 
-    for it in range(nt-1):
+        for it in range(nt-1):
 
-        for j in range(nx):
-            phi[j] = phiOld[j] - c*\
-                     (phiOld2[(j+1)%nx] - phiOld2[(j-1)%nx])
+            for j in range(nx):
+                phi[j] = phiOld[j] - c*\
+                        (phiOld2[(j+1)%nx] - phiOld2[(j-1)%nx])
 
-        phiOld = phiOld2.copy()
-        phiOld2 = phi.copy()
+            phiOld = phiOld2.copy()
+            phiOld2 = phi.copy()
 
 
     return phi
 
-
-def FTFS(phiOld, c, nt):
-    "Linear advection of profile in phiOld using FTFS, Courant number c"
-    "for nt time-steps"
-
-    nx = len(phiOld)
-
-    # new time-step array for phi
-    phi = phiOld.copy()
-
-    # FTCS for each time-step
-    for it in range(nt):
-        # Loop through all space using remainder after division (%)
-        # to cope with periodic boundary conditions
-        for j in range(nx):
-            phi[j] = phiOld[j] - c*\
-                     (phiOld[(j+1)%nx] - phiOld[(j)%nx])
-
-        # update arrays for next time-step
-        phiOld = phi.copy()
-
-    return phi
-
-
-def CTFS(phiOld, c, nt):
-    "Linear advection of profile in phiOld using CTFS, Courant number c"
-    "for nt time-steps"
-
-    nx = len(phiOld)
-
-    # value of phi generated  at time t_1
-    phiOld2 = FTFS(phiOld, c, 1)
-
-    phi = phiOld2.copy()
-
-    for it in range(nt-1):
-
-        for j in range(nx):
-            phi[j] = phiOld[j] - 2*c*\
-                     (phiOld2[(j+1)%nx] - phiOld2[(j)%nx])
-
-        phiOld = phiOld2.copy()
-        phiOld2 = phi.copy()
-
-    return phi
-
-
-def CTBS(phiOld, c, nt):
-    "Linear advection of profile in phiOld using CTBS, Courant number c"
-    "for nt time-steps"
-
-    nx = len(phiOld)
-
-    # value of phi generated  at time t_1
-    phiOld2 = FTBS(phiOld, c, 1)
-
-    phi = phiOld2.copy()
-
-    for it in range(nt-1):
-
-        for j in range(nx):
-            phi[j] = phiOld[j] - 2*c*\
-                     (phiOld2[(j)%nx] - phiOld2[(j-1)%nx])
-
-        phiOld = phiOld2.copy()
-        phiOld2 = phi.copy()
-
-    return phi
 
 
 
@@ -193,3 +132,100 @@ def LaxWendroff(phiOld, c, nt):
         phiOld = phi.copy()
 
     return phi
+
+
+def tvFTBS(phiOld, c, nt):
+    "calculation of total variation (at each time step) for the"
+    "linear advection of profile in phiOld using FTBS, Courant number c"
+    "for nt time-steps"
+
+    nx = len(phiOld)
+
+    # new time-step array for phi
+    phi = phiOld.copy()
+    #initialise TV as an array
+    TV_FTBS = np.zeros(nt+1)
+    for j in range(nx):
+        TV_FTBS[0] += abs(phiOld[j] - phiOld[(j-1)%nx])
+
+    # FTCS for each time-step
+    for it in range(nt):
+        # Loop through all space using remainder after division (%)
+        # to cope with periodic boundary conditions
+
+        #initialise total variation for time step nt
+        TV = 0
+
+        for j in range(nx):
+            phi[j] = phiOld[j] - c*\
+                     (phiOld[(j)] - phiOld[(j-1)%nx])
+            TV += abs(phi[j] - phi[(j-1)%nx])
+
+        #calculate total variation for this time step
+        TV_FTBS[it+1] = TV
+        # update arrays for next time-step
+        phiOld = phi.copy()
+
+    return TV_FTBS
+
+
+def tvCTCS(phiOld, c, nt):
+    "calculation of total variation (at each time step) for the"
+    "linear advection of profile in phiOld using CTCS, Courant number c"
+    "for nt time-steps"
+
+    nx = len(phiOld)
+    TV_CTCS = np.zeros(nt+1)
+    for j in range(nx):
+        TV_CTCS[0] += abs(phiOld[j] - phiOld[(j-1)%nx])
+    if nt == 0:
+        phi = phiOld
+
+    else:
+        # value of phi generated  at time t_1
+        phiOld2 = FTCS(phiOld, c, 1)
+        for j in range(nx):
+            TV_CTCS[1] += abs(phiOld2[j] - phiOld2[(j-1)%nx])
+
+        phi = phiOld2.copy()
+
+        for it in range(nt-1):
+
+            #initialise TV
+            TV = 0
+
+            for j in range(nx):
+                phi[j] = phiOld[j] - c*\
+                        (phiOld2[(j+1)%nx] - phiOld2[(j-1)%nx])
+                TV += abs(phi[j] - phi[(j-1)%nx])
+
+            TV_CTCS[it+2] = TV
+            phiOld = phiOld2.copy()
+            phiOld2 = phi.copy()
+
+    return TV_CTCS
+
+
+def tvLaxWendroff(phiOld, c, nt):
+    "calculation of total variation (at each time step) for the"
+    "linear advection of profile in phiOld using Lax-Wendroff"
+    "Courant number c, for nt time-steps"
+
+    nx = len(phiOld)
+    TV_LW = np.zeros(nt+1)
+    for j in range(nx):
+        TV_LW[0] += abs(phiOld[j] - phiOld[(j-1)%nx])
+
+    phi = phiOld.copy()
+
+    for it in range(nt):
+        TV = 0
+        for j in range(nx):
+
+            phi[j] = (1-c**2)*phiOld[j] - (c/2)*(1-c)*phiOld[(j+1)%nx] + \
+                    (c/2)*(1+c)*phiOld[(j-1)%nx]
+            TV += abs(phi[j] - phi[(j-1)%nx])
+        TV_LW[it+1] = TV
+        phiOld = phi.copy()
+
+    return TV_LW

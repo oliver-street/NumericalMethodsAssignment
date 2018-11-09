@@ -3,17 +3,6 @@
 # Outer code for setting up the linear advection problem on a uniform
 # grid and calling the function to perform the linear advection and plot.
 
-### Copy out most of this code. Code commented with 3#s (like this) ###
-### is here to help you to learn python and need not be copied      ###
-
-### The command at the top means that this python function can be  ###
-### run directly from the command line (you will also need to do   ###
-### "chmod u+x linearAdvect.py" in unix or linux and then execute: ###
-### ./linearAdvect.py                                              ###
-
-### Note that blocks are defined by indentation in Python. You     ###
-### should never mix tabs and spaces for indentation - use 4 spaces.###
-### Setup your text editor to insert 4 spaces when you press tab    ###
 
 
 ### The matplotlib package contains plotting functions              ###
