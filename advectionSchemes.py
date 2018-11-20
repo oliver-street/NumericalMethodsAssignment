@@ -15,7 +15,7 @@ def FTCS(phiOld, c, nt):
     phi = phiOld.copy()
 
     # FTCS for each time-step
-    for it in range(nt):
+    for it in range(int(nt)):
         # Loop through all space using remainder after division (%)
         # to cope with periodic boundary conditions
         for j in range(nx):
@@ -39,7 +39,7 @@ def FTBS(phiOld, c, nt):
 
 
     # FTCS for each time-step
-    for it in range(nt):
+    for it in range((nt)):
         # Loop through all space using remainder after division (%)
         # to cope with periodic boundary conditions
 
@@ -69,7 +69,7 @@ def CTCS(phiOld, c, nt):
 
         phi = phiOld2.copy()
 
-        for it in range(nt-1):
+        for it in range(int(nt-1)):
 
             for j in range(nx):
                 phi[j] = phiOld[j] - c*\
@@ -107,7 +107,7 @@ def BTCS(phiOld, c, nt):
         A[j+1,j] = -c/2
 
 
-    for it in range(nt):
+    for it in range(int(nt)):
         phi = np.linalg.solve(A,phiOld)
         phiOld = phi.copy()
 
@@ -122,7 +122,7 @@ def LaxWendroff(phiOld, c, nt):
 
     phi = phiOld.copy()
 
-    for it in range(nt):
+    for it in range(int(nt)):
 
         for j in range(nx):
 

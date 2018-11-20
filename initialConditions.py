@@ -43,3 +43,13 @@ def cosBell(x, alpha=0, beta=0.5):
 def mixed(x, a, b, c, d):
     "A square wave in one location and a cosine bell in another"
     return 1-(1-cosBell(x, a, b))*(1-squareWave(x, c, d))
+
+def sineWave(x,N=2):
+    "Function defining a sine wave as a function of position, x"
+    "with N full waves in the domain (default N=2)"
+    dx = x[1] - x[0]
+    nx = len(x)
+    domain_length = nx*dx
+    wavelength = domain_length/N
+    S = lambda x: np.sin(2*np.pi*x/wavelength)
+    return S(x)
