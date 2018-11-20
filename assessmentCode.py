@@ -14,7 +14,7 @@ def mainLinearAdvect():
     xmin = 0
     xmax = 1
     nx = 100
-    nt = 100
+    nt = 80
     c = 0.4
 
     # Derived parameters
@@ -58,9 +58,9 @@ def mainLinearAdvect():
     plt.plot(x, phiLaxWendroff, label='Lax-Wendroff', color='magenta')
     plt.axhline(0, linestyle=':', color='black')
     plt.ylim([-0.2,1.2])
-    plt.legend(bbox_to_anchor=(1.15 , 1.1))
+    plt.legend()
     plt.xlabel('$x$')
-    input('press return to save file and continue')
+    plt.title('Advection of "cosBell"',fontsize=18)
     plt.savefig('plots/LaxWendroff_FTBS_CTCS_cosBell.pdf')
     plt.show('plots/LaxWendroff_FTBS_CTCS_cosBell.pdf')
 
@@ -113,18 +113,79 @@ def mainLinearAdvect():
     plt.plot(x, phiLaxWendroff, label='Lax-Wendroff', color='magenta')
     plt.axhline(0, linestyle=':', color='black')
     plt.ylim([-0.2,1.2])
-    plt.legend(bbox_to_anchor=(1.15 , 1.1))
+    plt.legend()
     plt.xlabel('$x$')
-    input('press return to save file and continue')
+    plt.title('Advection of "squareWave"',fontsize=18)
     plt.savefig('plots/LaxWendroff_FTBS_CTCS_Squarewave.pdf')
     plt.show('plots/LaxWendroff_FTBS_CTCS_SquareWave.pdf')
 
-### Run the function main defined in this file                      ###
+
+    # New parameters
+    xmin = 0
+    xmax = 1
+    nx = 500
+    nt = 25
+    c = 1.5
+
+    # New derived parameters
+    dx = (xmax - xmin)/nx
+
+    # new spatial points for plotting and for defining initial conditions
+    x = np.arange(xmin, xmax, dx)
+
+    # New initial conditions
+    phiOld = cosBell(x, 0.2, 0.5)
+
+    # Exact solution is the initial condition shifted around the domain
+    phiAnalytic = cosBell((x - c*nt*dx)%(xmax - xmin), 0.2, 0.5)
+
+    # Advect the profile using finite difference for all the time steps
+    phiCTCS = CTCS(phiOld.copy(), c, nt)
+    phiFTCS = FTCS(phiOld.copy(), c, nt)
+    phiFTBS = FTBS(phiOld.copy(), c, nt)
+    phiBTCS = BTCS(phiOld.copy(), c, nt)
+    phiLaxWendroff = LaxWendroff(phiOld.copy(), c, nt)
+
+    # Calculate and print out error norms
+    print("CTCS l2 error norm = ", l2ErrorNorm(phiCTCS, phiAnalytic))
+    print("CTCS linf error norm = ", lInfErrorNorm(phiCTCS, phiAnalytic))
+    print("FTBS l2 error norm = ", l2ErrorNorm(phiFTBS, phiAnalytic))
+    print("FTBS linf error norm = ", lInfErrorNorm(phiFTBS, phiAnalytic))
+    print("BTCS l2 error norm = ", l2ErrorNorm(phiBTCS, phiAnalytic))
+    print("BTCS linf error norm = ", lInfErrorNorm(phiBTCS, phiAnalytic))
+    print("Lax-Wendroff l2 error norm = ", l2ErrorNorm(phiLaxWendroff, phiAnalytic))
+    print("Lax-Wendroff linf error norm = ", lInfErrorNorm(phiLaxWendroff, phiAnalytic))
+
+    # Plot the solutions
+    font = {'size'   : 20}
+    plt.rc('font', **font)
+    plt.figure(1)
+    plt.clf()
+    plt.ion()
+    plt.plot(x, phiOld, label='Initial', color='black')
+    plt.plot(x, phiAnalytic, label='Analytic', color='black',
+             linestyle='--', linewidth=2)
+    plt.plot(x, phiCTCS, label='CTCS', color='red')
+    plt.plot(x, phiBTCS, label='BTCS', color='blue')
+    plt.plot(x, phiLaxWendroff, label='Lax-Wendroff', color='magenta')
+    plt.plot(x, phiFTBS, label='FTBS', color='green')
+    plt.axhline(0, linestyle=':', color='black')
+    plt.ylim([-0.2,1.2])
+    plt.legend()
+    plt.xlabel('$x$')
+    plt.title('Advection with Courant number 1.5',fontsize=18)
+    plt.savefig('plots/BTCS_stability.pdf')
+    plt.show('plots/BTCS_stability.pdf')
+
+
 mainLinearAdvect()
 
 
 
 def mainTV():
+    "Advect the initial conditions using various advection schemes and"
+    "calculate total variation at each time step"
+
     # Parameters
     xmin = 0
     xmax = 1
@@ -154,10 +215,11 @@ def mainTV():
     plt.plot(t, tvLaxWendroff(phiOld,c,nt), ".-", label='TV LW', color='red')
     plt.plot(t, tvCTCS(phiOld,c,nt), ".-", label='TV CTCS', color='blue')
     plt.axhline(2, linestyle=':', color='black')
-    plt.legend(bbox_to_anchor=(1.15 , 1.1))
+    plt.legend()
     plt.ylim(0,8)
     plt.xlabel('$t$')
     plt.ylabel('$TV$')
+    plt.title('Total Variation against Time with $c=0.05$',fontsize=18)
     plt.savefig('plots/TV_CourantNumber05.pdf')
     plt.show('plots/TV_CourantNumber05.pdf')
 
@@ -173,10 +235,11 @@ def mainTV():
     plt.plot(t, tvLaxWendroff(phiOld,c,nt), ".-", label='TV LW', color='red')
     plt.plot(t, tvCTCS(phiOld,c,nt), ".-", label='TV CTCS', color='blue')
     plt.axhline(2, linestyle=':', color='black')
-    plt.legend(bbox_to_anchor=(1.15 , 1.1))
+    plt.legend()
     plt.ylim(0,8)
     plt.xlabel('$t$')
     plt.ylabel('$TV$')
+    plt.title('Total Variation against Time with $c=0.2$',fontsize=18)
     plt.savefig('plots/TV_CourantNumber2.pdf')
     plt.show('plots/TV_CourantNumber2.pdf')
 
@@ -192,10 +255,11 @@ def mainTV():
     plt.plot(t, tvLaxWendroff(phiOld,c,nt), ".-", label='TV LW', color='red')
     plt.plot(t, tvCTCS(phiOld,c,nt), ".-", label='TV CTCS', color='blue')
     plt.axhline(2, linestyle=':', color='black')
-    plt.legend(bbox_to_anchor=(1.15 , 1.1))
+    plt.legend()
     plt.ylim(0,8)
     plt.xlabel('$t$')
     plt.ylabel('$TV$')
+    plt.title('Total Variation against Time with $c=0.4$',fontsize=18)
     plt.savefig('plots/TV_CourantNumber4.pdf')
     plt.show('plots/TV_CourantNumber4.pdf')
 
@@ -211,16 +275,21 @@ def mainTV():
     plt.plot(t, tvLaxWendroff(phiOld,c,nt), ".-", label='TV LW', color='red')
     plt.plot(t, tvCTCS(phiOld,c,nt), ".-", label='TV CTCS', color='blue')
     plt.axhline(2, linestyle=':', color='black')
-    plt.legend(bbox_to_anchor=(1.15 , 1.1))
+    plt.legend()
     plt.ylim(0,8)
     plt.xlabel('$t$')
     plt.ylabel('$TV$')
+    plt.title('Total Variation against Time with $c=0.9$',fontsize=18)
     plt.savefig('plots/TV_CourantNumber9.pdf')
     plt.show('plots/TV_CourantNumber9.pdf')
 ### Run the function main defined in this file                      ###
 mainTV()
 
 def mainTime():
+    "Advect the initial conditions using various advection schemes and"
+    "time how long this takes"
+
+
     xmin = 0
     xmax = 1
     nx = 150
@@ -252,6 +321,9 @@ mainTime()
 
 
 def mainl2():
+    "Advect the initial conditions using various advection schemes, for"
+    "multiple values of dx, and plot the l2 error norm against dx"
+
     l2FTBS = np.zeros(16)
     l2LW = np.zeros(16)
     l2CTCS = np.zeros(16)
@@ -297,7 +369,7 @@ def mainl2():
     plt.legend()
     plt.xlabel('$dx$')
     plt.ylabel('$l2 Error$')
-    input('press return to continue')
+    plt.title('$l2$ error norm against $\Delta x$ on a "log-log" scale',fontsize=18)
     plt.savefig('plots/l2Error.pdf')
     plt.show('plots/l2Error.pdf')
 
