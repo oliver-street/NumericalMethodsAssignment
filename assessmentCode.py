@@ -322,7 +322,8 @@ mainTime()
 
 def mainl2():
     "Advect the initial conditions using various advection schemes, for"
-    "multiple values of dx, and plot the l2 error norm against dx"
+    "multiple values of dx, and plot the l2 error norm against dx on a"
+    "log-log scale"
 
     l2FTBS = np.zeros(16)
     l2LW = np.zeros(16)
